@@ -1,0 +1,14 @@
+name: Deploy Todos Clientes
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    strategy:
+      matrix:
+        cliente: [nair, chatnettest]
+
+    uses: ./.github/workflows/deploy-template.yml
+    with:
+      cliente: ${{ matrix.cliente }}
