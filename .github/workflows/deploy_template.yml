@@ -1,0 +1,25 @@
+name: Deploy Template
+
+on:
+  workflow_call:
+    inputs:
+      cliente:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          cd /www/wwwroot/${{ inputs.cliente }}
+          git pull
+          npm install
+          npm run migrate -w backend
+          npm run build -w backend
+          npm run build -w frontend
+          pm2 restart ${{ inputs.cliente }}-backend
