@@ -1,15 +1,21 @@
-FROM node:18
+FROM php:8.2-cli
 
 WORKDIR /app
 
-COPY package*.json ./
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql
 
-RUN npm install
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . .
 
+RUN composer install
+
 RUN chmod +x entrypoint.sh
 
-EXPOSE 3000
+EXPOSE 8000
 
 CMD ["./entrypoint.sh"]
