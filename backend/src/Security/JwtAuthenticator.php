@@ -71,8 +71,6 @@ class JwtAuthenticator extends AbstractAuthenticator
         Request $request,
         AuthenticationException $exception,
     ): ?Response {
-        echo $exception->getMessage();
-
         return new Response('Unauthorized', 401);
     }
 }

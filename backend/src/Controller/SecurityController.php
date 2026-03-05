@@ -23,7 +23,6 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login', methods: ['POST'])]
     public function login(
         Request $request,
-        // Response $response,
         UserRepository $userRepository,
         UserPasswordHasherInterface $passwordHasher,
         JwtService $jwtService,
@@ -32,7 +31,6 @@ class SecurityController extends AbstractController
     ): JsonResponse {
         $data = $request->toArray();
         $user = $userRepository->findOneBy(['email' => $data['email']]);
-
         if (!$user) {
             return $this->json(['error' => 'Credenciais inválidas'], 401);
         }
@@ -83,8 +81,7 @@ class SecurityController extends AbstractController
         JwtService $jwtService,
         EntityManagerInterface $em,
     ): JsonResponse {
-        $refreshToken = $request->headers->get('X-Refresh-Token');
-
+        $refreshToken = $request->cookies->get('X-Refresh-Token');
         $refreshTokenDB = $repository->findOneBy([
             'token' => $refreshToken,
             'revoked' => false,
@@ -112,7 +109,7 @@ class SecurityController extends AbstractController
         $em->flush();
 
         $newAccessToken = $jwtService->generate([
-            'userId' => $refreshTokenDB->getUser()->getId(),
+            'sub' => $refreshTokenDB->getUser()->getId(),
         ]);
 
         $response = $this->json([
@@ -170,13 +167,28 @@ class SecurityController extends AbstractController
         RefreshTokenRepository $repo,
         EntityManagerInterface $em,
     ): JsonResponse {
-        $refreshToken = $request->headers->get('X-Refresh-Token');
+        $refreshToken = $request->cookies->get('X-Refresh-Token');
         $refreshTokenDB = $repo->findOneBy(['token' => $refreshToken]);
         $refreshTokenDB->revoke();
+        $response = $this->json(['message' => 'Logout realizado']);
+
+        $response->headers->setCookie(
+            new Cookie(
+                'X-Refresh-Token',
+                '',
+                0,
+                '/',
+                null,
+                true,
+                true,
+                false,
+                Cookie::SAMESITE_STRICT
+            )
+        );
 
         $em->persist($refreshTokenDB);
         $em->flush();
 
-        return $this->json(['message' => 'Logout realizado']);
+        return $response;
     }
 }

@@ -1,3 +1,15 @@
 #root {
   height: 100vh;
 }
+
+.tip.hidden {
+  filter: blur(6px);
+  opacity: 0.6;
+  user-select: none;
+}
+
+.tip.revealed {
+  filter: none;
+  opacity: 1;
+  transition: filter 0.3s ease;
+}

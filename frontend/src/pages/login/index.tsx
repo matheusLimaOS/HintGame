@@ -39,7 +39,7 @@ function Login() {
 
   const mutation = useMutation<newUserData, AxiosError<ApiErrorResponse>, newUserData>({
     mutationFn: (newUser) =>
-      api.post('/login', newUser).then((res) => {
+      api.post('/login', newUser, { skipAuthRefresh: true }).then((res) => {
         return res.data
       }),
     onSuccess: () => {
@@ -66,7 +66,7 @@ function Login() {
         >
           {({ handleSubmit, errors, touched }) => (
             <FormWrapper onSubmit={handleSubmit}>
-              <h1>{t('title')}</h1>
+              <img src="/P.png" alt={t('title')} style={{ height: 250 }} />
               <Field
                 error={touched.email && Boolean(errors.email)}
                 helperText={touched.email && errors.email}

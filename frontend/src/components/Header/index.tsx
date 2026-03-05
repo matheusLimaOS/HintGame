@@ -1,7 +1,10 @@
-import { AppBar, Box, FormControl, MenuItem, Select, Toolbar } from '@mui/material'
+import { AppBar, Box, Button, FormControl, MenuItem, Select, Toolbar } from '@mui/material'
+import { useMutation } from '@tanstack/react-query'
 import type { FlagIconCode } from 'react-flag-kit'
 import { FlagIcon } from 'react-flag-kit'
 import { useTranslation } from 'react-i18next'
+import api from '../../services/api'
+import { clearAccessToken } from '../../storage'
 
 type Language = {
   code: string
@@ -16,18 +19,32 @@ const languages: Array<Language> = [
 
 const Header = () => {
   const { t, i18n } = useTranslation()
-
   const currentLanguage = i18n.language
+  const hideLogoutRoutes = ['/', '/login', '/register']
+  const showLogout = !hideLogoutRoutes.includes(location.pathname)
 
   const handleChangeLanguage = (event: { target: { value: string } }) => {
     i18n.changeLanguage(event.target.value)
   }
 
+  const logout = useMutation({
+    mutationFn: async () => {
+      await api.post(`/logout`)
+    },
+    onSuccess: () => {
+      clearAccessToken()
+      document.cookie = `X-Refresh-Token=; Max-Age=0; path=/`
+      window.location.href = '/'
+    },
+  })
+
   return (
     <AppBar color="inherit" position="fixed">
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <p> Telegram Web Fé </p>
-        <Box>
+        <Box onClick={() => (window.location.href = '/home')} sx={{ cursor: 'pointer' }}>
+          <img src="/P.png" alt="Logo" style={{ height: 80 }} />
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <FormControl
             variant="standard"
             sx={{ minWidth: 120, display: 'flex', alignItems: 'end', justifyContent: 'end' }}
@@ -36,7 +53,7 @@ const Header = () => {
               IconComponent={() => null}
               value={currentLanguage}
               onChange={handleChangeLanguage}
-              label={t('language_selector_label')}
+              label={t('header.label.language')}
               sx={{
                 '& .MuiSelect-select': {
                   paddingRight: '14px !important',
@@ -64,6 +81,7 @@ const Header = () => {
               ))}
             </Select>
           </FormControl>
+          {showLogout && <Button onClick={() => logout.mutate()}>{t('logout')}</Button>}
         </Box>
       </Toolbar>
     </AppBar>

@@ -2,6 +2,12 @@ import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } fr
 import axios, { AxiosError } from 'axios'
 import { clearAccessToken, getAccessToken, setAccessToken } from '../storage'
 
+declare module 'axios' {
+  export interface AxiosRequestConfig {
+    skipAuthRefresh?: boolean
+  }
+}
+
 interface FailedQueueItem {
   resolve: (value: AxiosResponse | PromiseLike<AxiosResponse>) => void
   reject: (error: unknown) => void
@@ -44,7 +50,12 @@ api.interceptors.response.use(
   ) => {
     const originalRequest = error.config
 
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest?.skipAuthRefresh &&
+      originalRequest &&
+      !originalRequest._retry
+    ) {
       if (isRefreshing) {
         return new Promise<AxiosResponse>((resolve, reject) => {
           failedQueue.push({ resolve, reject })
@@ -57,7 +68,7 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
-        const { data } = await api.post<{ accessToken: string }>('/refresh-token')
+        const { data } = await api.post<{ accessToken: string }>('/refresh')
 
         setAccessToken(data.accessToken)
 

@@ -1,5 +1,11 @@
 {
-  "title": "Telegram Web",
+  "title": "Hint",
+  "header": {
+    "label": {
+      "language": "Language"
+    }
+  },
+  "logout": "Log Out",
   "login": {
     "fields": {
       "email": "E-mail",
@@ -54,6 +60,14 @@
     "toast": {
       "success": "Registered successfully!",
       "error": "Failed to register. Please check your information and try again."
+    }
+  },
+  "home": {
+    "title": "Select Category",
+    "noCards": "No cards available",
+    "loading": {
+      "loadingCategories": "Loading categories...",
+      "errorLoadingCategories": "Error loading categories."
     }
   }
 }

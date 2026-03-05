@@ -5,24 +5,26 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { AppLayout } from './components/AppLayout/index.tsx'
 import Header from './components/Header/index.tsx'
 import './i18n'
 import './index.css'
+import Home from './pages/home/index.tsx'
 import Login from './pages/login/index.tsx'
 import NewUser from './pages/newUser/index.tsx'
+import PlayCard from './pages/playCard/index.tsx'
 import theme from './theme'
-
 const queryClient = new QueryClient()
 const router = createBrowserRouter([
   {
-    path: '/newUser',
-    element: <NewUser />,
-    children: [{ path: 'newUser' }],
-  },
-  {
-    path: '/',
-    element: <Login />,
-    children: [{ path: 'login' }],
+    element: <AppLayout />,
+    children: [
+      { path: '/', element: <Login /> },
+      { path: '/login', element: <Login /> },
+      { path: '/home', element: <Home /> },
+      { path: '/newUser', element: <NewUser /> },
+      { path: '/playCard/:cardId', element: <PlayCard /> },
+    ],
   },
 ])
 

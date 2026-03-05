@@ -1,5 +1,11 @@
 {
   "title": "Telegram Web",
+  "header": {
+    "label": {
+      "language": "Idioma"
+    }
+  },
+  "logout": "Sair",
   "login": {
     "fields": {
       "email": "E-mail",
@@ -55,5 +61,20 @@
       "success": "Cadastro realizado com sucesso!",
       "error": "Falha ao cadastrar. Por favor, verifique suas informações e tente novamente."
     }
+  },
+  "home": {
+    "title": "Escolha a categoria",
+    "noCards": "Sem carta disponivel",
+    "loading": {
+      "loadingCategories": "Carregando categorias...",
+      "errorLoadingCategories": "Erro ao carregar categorias."
+    }
+  },
+  "playCard": {
+    "category": {
+      "reveal": "Diga aos jogadores que sou um(a): "
+    },
+    "guess": "Palpite",
+    "answer": "Resposta"
   }
 }
