@@ -12,6 +12,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . .
 
+RUN cp .env.example .env
+
 RUN composer install
 
 RUN chmod +x entrypoint.sh
