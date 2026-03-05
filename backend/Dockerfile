@@ -2,6 +2,9 @@ FROM php:8.4-cli
 
 WORKDIR /app
 
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
