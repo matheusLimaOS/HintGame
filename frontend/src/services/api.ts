@@ -14,7 +14,7 @@ interface FailedQueueItem {
 }
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: '/',
   withCredentials: true,
 })
 
