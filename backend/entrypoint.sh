@@ -6,8 +6,8 @@ sleep 5
 
 echo "Running migrations..."
 
-npm run migrate
+php bin/console doctrine:migrations:migrate --no-interaction
 
-echo "Starting server..."
+echo "Starting Symfony server..."
 
-npm start
+php -S 0.0.0.0:8000 -t public
