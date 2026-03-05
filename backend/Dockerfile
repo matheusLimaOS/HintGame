@@ -14,7 +14,7 @@ COPY . .
 
 RUN cp .env.example .env
 
-RUN composer install
+RUN composer install --no-interaction --no-dev
 
 RUN chmod +x entrypoint.sh
 
